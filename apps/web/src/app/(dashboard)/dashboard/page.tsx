@@ -51,9 +51,9 @@ export default async function DashboardPage() {
         <div className="rounded-[28px] border border-white/10 bg-slate-900/70 p-6 shadow-lg shadow-black/10">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold text-white">Recent activity</h2>
-            <a href="/dashboard/notifications" className="text-sm font-medium text-cyan-400 hover:text-cyan-300">
+            <Link href="/dashboard/notifications" className="text-sm font-medium text-cyan-400 hover:text-cyan-300">
               View all
-            </a>
+            </Link>
           </div>
           <div className="mt-6 space-y-3">
             {recentActivity.map((item) => (

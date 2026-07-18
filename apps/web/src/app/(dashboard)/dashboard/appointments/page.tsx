@@ -108,7 +108,7 @@ export default async function AppointmentsPage() {
         </CardHeader>
         <CardContent className="space-y-2 text-sm text-blue-100">
           <p>• Attend all scheduled appointments on time</p>
-          <p>• Bring required documents (you'll see what's needed in your application)</p>
+          <p>• Bring required documents (you&apos;ll see what&apos;s needed in your application)</p>
           <p>• Contact your city center 24 hours in advance if you need to reschedule</p>
           <p>• Missed appointments may affect your program eligibility</p>
         </CardContent>

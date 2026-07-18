@@ -151,7 +151,7 @@ export function ApplicationForm({
               placeholder="Why do you want to join this program? What are your goals?"
             />
             <FormHelper>
-              Tell us why you're applying and what you hope to achieve
+              Tell us why you&apos;re applying and what you hope to achieve
             </FormHelper>
           </FormField>
 

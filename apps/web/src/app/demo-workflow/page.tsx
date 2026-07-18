@@ -291,7 +291,7 @@ export default async function DemoWorkflowPage() {
               <li>Create an account via Sign Up</li>
               <li>Login with your credentials</li>
               <li>Browse available programs on dashboard</li>
-              <li>Click "Apply" on a program</li>
+              <li>Click &quot;Apply&quot; on a program</li>
               <li>Fill in the application form</li>
               <li>Upload required documents</li>
               <li>Submit your application</li>
@@ -307,7 +307,7 @@ export default async function DemoWorkflowPage() {
               <li>Create admin account via Sign Up</li>
               <li>Navigate to admin dashboard</li>
               <li>View pending applications</li>
-              <li>Click "Review" on an application</li>
+              <li>Click &quot;Review&quot; on an application</li>
               <li>View applicant details and documents</li>
               <li>Add review notes</li>
               <li>Approve or reject the application</li>

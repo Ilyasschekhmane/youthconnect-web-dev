@@ -205,7 +205,7 @@ export async function CitizenDashboard() {
         <Card>
           <CardContent className="pt-6">
             <div className="text-center">
-              <p className="text-slate-400 mb-4">You haven't applied to any programs yet</p>
+              <p className="text-slate-400 mb-4">You haven&apos;t applied to any programs yet</p>
               <p className="text-sm text-slate-500">
                 Browse available programs above and submit your first application
               </p>

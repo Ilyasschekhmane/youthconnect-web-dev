@@ -101,7 +101,7 @@ export default async function NotificationsPage() {
               <Bell className="h-12 w-12 text-slate-600 mx-auto mb-4" />
               <p className="text-slate-300 font-semibold">No notifications yet</p>
               <p className="text-slate-400 text-sm mt-2">
-                You'll see updates here when your applications change or new messages arrive
+                You&apos;ll see updates here when your applications change or new messages arrive
               </p>
             </div>
           </CardContent>
