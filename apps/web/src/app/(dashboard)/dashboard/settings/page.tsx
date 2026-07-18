@@ -1,0 +1,36 @@
+import { requireRole } from '@/lib/auth/session';
+
+const settings = [
+  { label: 'Email notifications', value: 'Enabled' },
+  { label: 'Appointment reminders', value: 'Enabled' },
+  { label: 'Privacy preferences', value: 'Shared with program staff' },
+];
+
+export default async function SettingsPage() {
+  const session = await requireRole('applicant');
+  if (!session) return null;
+
+  return (
+    <main className="space-y-6">
+      <section className="rounded-[32px] border border-white/10 bg-slate-900/70 p-6 shadow-lg shadow-black/10 sm:p-8">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-400">Settings</p>
+            <h1 className="mt-2 text-3xl font-semibold text-white">Manage your preferences</h1>
+          </div>
+          <div className="rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-2 text-sm font-medium text-cyan-300">
+            Account ready
+          </div>
+        </div>
+        <div className="mt-6 space-y-4">
+          {settings.map((setting) => (
+            <div key={setting.label} className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-slate-950/60 p-4 sm:flex-row sm:items-center sm:justify-between">
+              <p className="font-medium text-white">{setting.label}</p>
+              <p className="text-sm text-slate-400">{setting.value}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    </main>
+  );
+}
