@@ -173,11 +173,11 @@ export async function CitizenDashboard() {
                       <div className="flex items-center gap-2">
                         <FileText className="h-4 w-4 text-slate-400" />
                         <h4 className="font-semibold text-white">
-                          {app.programs?.name}
+                          {Array.isArray(app.programs) ? (app.programs as any)[0]?.name : (app.programs as any)?.name}
                         </h4>
                       </div>
                       <p className="text-sm text-slate-400 mt-1">
-                        Location: {app.cities?.name || 'N/A'}
+                      Location: {Array.isArray(app.cities) ? (app.cities as any)[0]?.name : (app.cities as any)?.name || 'N/A'}
                       </p>
                       <p className="text-xs text-slate-500 mt-2">
                         Submitted:{' '}

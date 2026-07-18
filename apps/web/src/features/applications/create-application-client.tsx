@@ -13,7 +13,7 @@ export function CreateApplicationClient({ programs = [], cities = [], orgId }: {
     // data contains programId, cityId, applicantEmail, notes
     try {
       // createApplication expects organizationId, programId, cityId, userId (current user) — we'll call without userId and let mutation use current session user
-      await createApplication(orgId, data.programId, data.cityId, (data.applicantEmail as string) || undefined as any);
+      await createApplication(orgId as string, data.programId, data.cityId, (data.applicantEmail as string) ?? '');
       setOpen(false);
       router.refresh();
     } catch (err) {

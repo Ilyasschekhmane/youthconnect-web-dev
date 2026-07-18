@@ -482,7 +482,7 @@ export default function HomePage() {
               <Button asChild size="lg" className="bg-amber-400 text-slate-950 shadow-xl shadow-amber-400/20 hover:bg-amber-300 transition-transform duration-300 hover:-translate-y-0.5">
                 <Link href="/signup">Start pilot</Link>
               </Button>
-              <Button asChild variant="secondary" size="lg" className="border-white/20 bg-white/10 text-white shadow-sm shadow-white/10 hover:bg-white/15 transition-transform duration-300 hover:-translate-y-0.5">
+              <Button asChild variant="outline" size="lg" className="border-white/20 bg-white/10 text-white shadow-sm shadow-white/10 hover:bg-white/15 transition-transform duration-300 hover:-translate-y-0.5">
                 <Link href="#overview">See platform</Link>
               </Button>
             </motion.div>
@@ -1143,7 +1143,7 @@ export default function HomePage() {
               <Button asChild size="lg" className="bg-emerald-600 text-white hover:bg-emerald-700">
                 <Link href="/signup">Book a demo</Link>
               </Button>
-              <Button asChild variant="secondary" size="lg" className="border-slate-300 text-white hover:bg-slate-800/90">
+              <Button asChild variant="outline" size="lg" className="border-slate-300 text-white hover:bg-slate-800/90">
                 <Link href="/contact">Contact sales</Link>
               </Button>
             </div>

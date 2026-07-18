@@ -51,7 +51,7 @@ export default function DesignSystemDemoPage() {
           brand={<div className="text-lg font-semibold">YouthConnect</div>}
           actions={
             <>
-              <Button variant="secondary">Preview</Button>
+              <Button variant="outline">Preview</Button>
               <Button>Launch</Button>
             </>
           }
@@ -84,7 +84,7 @@ export default function DesignSystemDemoPage() {
               <CardContent>
                 <div className="flex flex-wrap gap-3">
                   <Button>Primary action</Button>
-                  <Button variant="secondary">Secondary</Button>
+                  <Button>Secondary</Button>
                   <Button variant="ghost">Ghost</Button>
                 </div>
                 <div className="mt-6 grid gap-4 md:grid-cols-2">
@@ -120,7 +120,7 @@ export default function DesignSystemDemoPage() {
                 </div>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button variant="secondary">Open dialog</Button>
+                    <Button variant="outline">Open dialog</Button>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
@@ -128,7 +128,7 @@ export default function DesignSystemDemoPage() {
                       <DialogDescription>Make a decision with full context and clear outcomes.</DialogDescription>
                     </DialogHeader>
                     <div className="flex justify-end gap-2">
-                      <Button variant="secondary">Reject</Button>
+                      <Button variant="outline">Reject</Button>
                       <Button>Approve</Button>
                     </div>
                   </DialogContent>

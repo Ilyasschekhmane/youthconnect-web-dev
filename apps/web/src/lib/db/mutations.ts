@@ -97,23 +97,27 @@ export async function approveApplication(applicationId: string, notes?: string) 
 
   // Get application details and create notification
   const app = await supabase
-    .from('applications')
-    .select('applicant_user_id, organization_id, programs (name)')
-    .eq('id', applicationId)
-    .single();
+  .from('applications')
+  .select('applicant_user_id, organization_id, programs(name)')
+  .eq('id', applicationId)
+  .single();
 
-  if (app.data) {
-    await supabase.from('notifications').insert({
-      organization_id: app.data.organization_id,
-      recipient_user_id: app.data.applicant_user_id,
-      related_entity_type: 'application',
-      related_entity_id: applicationId,
-      title: 'Application Approved! 🎉',
-      body: `Congratulations! Your application for ${app.data.programs?.name} has been approved. Please book an appointment to proceed.`,
-      channel: 'in_app',
-    });
-  }
+if (app.data) {
+  const programs = app.data.programs as any;
 
+const programName = Array.isArray(programs)
+  ? programs[0]?.name
+  : programs?.name;
+  await supabase.from('notifications').insert({
+    organization_id: app.data.organization_id,
+    recipient_user_id: app.data.applicant_user_id,
+    related_entity_type: 'application',
+    related_entity_id: applicationId,
+    title: 'Application Approved! 🎉',
+    body: `Congratulations! Your application for ${programName ?? 'the selected program'} has been approved. Please book an appointment to proceed.`,
+    channel: 'in_app',
+  });
+}
   revalidatePath('/dashboard/applications');
   return data;
 }

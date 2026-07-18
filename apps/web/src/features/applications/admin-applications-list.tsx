@@ -105,7 +105,7 @@ export async function AdminApplicationsList() {
     );
   }
 
-  const applications = await getOrganizationApplications(org.id);
+  const applications: any[] = await getOrganizationApplications(org.id);
 
   const pendingApplications = applications.filter(
     (a) => a.status === 'submitted' || a.status === 'under_review'
