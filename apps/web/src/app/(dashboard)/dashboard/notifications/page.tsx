@@ -38,7 +38,7 @@ export default async function NotificationsPage() {
         </div>
         {unreadCount > 0 && (
           <form action={markAllNotificationsAsRead}>
-            <Button variant="outline" size="sm">
+            <Button variant="secondary" size="sm">
               <Archive className="h-4 w-4 mr-2" />
               Mark all as read
             </Button>

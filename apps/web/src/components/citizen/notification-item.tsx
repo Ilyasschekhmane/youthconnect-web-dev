@@ -72,8 +72,8 @@ export function CitizenNotificationItem({
         <div className="flex items-center gap-1 flex-shrink-0">
           {!isRead && (
             <Button
-              size="xs"
-              variant="ghost"
+            size="sm"
+              variant="secondary"
               onClick={handleMarkAsRead}
               disabled={isMarking}
               title="Mark as read"
@@ -82,8 +82,8 @@ export function CitizenNotificationItem({
             </Button>
           )}
           <Button
-            size="xs"
-            variant="ghost"
+            size="sm"
+            variant="secondary"
             onClick={handleDelete}
             disabled={isDeleting}
             title="Delete"

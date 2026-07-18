@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { bookAppointment, getServerSupabase as noop } from '@/lib/db/mutations';
+import { bookAppointment } from '@/lib/db/mutations';
 
 export function AppointmentPanel({ application }: { application: any }) {
   const [type, setType] = useState('Interview');

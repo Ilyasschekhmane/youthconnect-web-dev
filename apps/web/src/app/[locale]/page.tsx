@@ -95,7 +95,7 @@ export default function LocalizedHomePage() {
               <Button asChild size="lg" className="bg-cyan-500 text-slate-950 hover:bg-cyan-400">
                 <Link href="/signup">Start free demo</Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="border-slate-700 bg-transparent text-white hover:bg-slate-900">
+              <Button asChild variant="secondary" size="lg" className="border-slate-700 bg-transparent text-white hover:bg-slate-900">
                 <Link href="#how-it-works">See how it works</Link>
               </Button>
             </div>

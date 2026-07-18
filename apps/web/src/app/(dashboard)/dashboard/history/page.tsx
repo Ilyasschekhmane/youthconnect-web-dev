@@ -107,8 +107,8 @@ export default async function HistoryPage() {
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div>
-                      <CardTitle className="text-lg">{app.programs?.name}</CardTitle>
-                      <p className="text-sm text-slate-400 mt-1">{app.cities?.name}</p>
+                      <CardTitle className="text-lg">{Array.isArray(app.programs) ? (app.programs as any)[0]?.name : (app.programs as any)?.name}</CardTitle>
+                                            <p className="text-sm text-slate-400 mt-1">{Array.isArray(app.cities) ? (app.cities as any)[0]?.name : (app.cities as any)?.name}</p>
                     </div>
                     <div className="text-xs font-semibold px-3 py-1 rounded-full bg-slate-800 text-slate-200">
                       {audits.length} events

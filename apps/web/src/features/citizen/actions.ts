@@ -21,7 +21,7 @@ export async function markNotificationAsRead(notificationId: string) {
   return { success: true };
 }
 
-export async function markAllNotificationsAsRead() {
+export async function markAllNotificationsAsRead(_formData?: FormData): Promise<void> {
   const supabase = await getServerSupabase();
   const user = await getCurrentUser();
 
@@ -36,7 +36,7 @@ export async function markAllNotificationsAsRead() {
   if (error) throw new Error('Failed to mark notifications as read');
 
   revalidatePath('/dashboard/notifications');
-  return { success: true };
+  return;
 }
 
 export async function deleteNotification(notificationId: string) {
