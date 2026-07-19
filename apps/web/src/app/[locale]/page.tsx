@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@youthconnect/ui';
 
 const features = [
@@ -20,7 +21,7 @@ const features = [
   },
 ];
 
-const cities = ['Chicago', 'Austin', 'Denver', 'Atlanta', 'Phoenix', 'Seattle'];
+const cities = ['Rabat', 'Agadir', 'Marrakech', 'Oujda', 'Berkane', 'Fes'];
 
 const programs = [
   {
@@ -60,9 +61,12 @@ export default function LocalizedHomePage() {
       <section className="mx-auto flex max-w-7xl flex-col px-6 pb-20 pt-8 sm:px-8 lg:px-12 lg:pt-10">
         <header className="mb-10 flex items-center justify-between rounded-full border border-slate-200/80 bg-white/70 px-4 py-3 shadow-sm backdrop-blur">
           <Link href="/" className="text-base font-semibold tracking-[0.2em] text-slate-900 uppercase">
-            YouthConnect
+            Atlas-V1-Oujda
           </Link>
           <nav aria-label="Primary" className="hidden items-center gap-6 text-sm font-medium text-slate-600 sm:flex">
+            <a href="#Royal initiatives" className="transition hover:text-slate-900">
+              Royal initiatives
+            </a>
             <a href="#features" className="transition hover:text-slate-900">
               Features
             </a>
@@ -102,11 +106,11 @@ export default function LocalizedHomePage() {
             <dl className="grid gap-4 pt-2 sm:grid-cols-3">
               <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
                 <dt className="text-sm text-slate-400">Programs launched</dt>
-                <dd className="mt-1 text-2xl font-semibold text-white">120+</dd>
+                <dd className="mt-1 text-2xl font-semibold text-white">120+  0</dd>
               </div>
               <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
                 <dt className="text-sm text-slate-400">Cities served</dt>
-                <dd className="mt-1 text-2xl font-semibold text-white">28</dd>
+                <dd className="mt-1 text-2xl font-semibold text-white">28  0</dd>
               </div>
               <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
                 <dt className="text-sm text-slate-400">Applicant satisfaction</dt>
@@ -142,6 +146,16 @@ export default function LocalizedHomePage() {
           </div>
         </div>
       </section>
+
+      <div className="flex justify-center">
+  <Image
+    src="/images/hero.png"
+    alt="YouthConnect platform"
+    width={1250}
+    height={3000}
+    className="rounded-3xl object-cover"
+  />
+</div>
 
       <section id="features" className="mx-auto max-w-7xl px-6 py-16 sm:px-8 lg:px-12">
         <div className="max-w-2xl">
@@ -187,6 +201,16 @@ export default function LocalizedHomePage() {
           </div>
         </div>
       </section>
+
+      <div className="flex justify-center">
+  <Image
+    src="/images/hero2.png"
+    alt="YouthConnect platform"
+    width={1250}
+    height={3000}
+    className="rounded-3xl object-cover"
+  />
+</div>
 
       <section id="cities" className="mx-auto max-w-7xl px-6 py-16 sm:px-8 lg:px-12">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">

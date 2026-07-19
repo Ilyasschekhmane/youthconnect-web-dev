@@ -1,0 +1,61 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "platform": "Plateforme",
+    "youth_centers": "Centres de jeunesse",
+    "programs": "Programmes",
+    "training": "Formation",
+    "employment": "Emploi",
+    "entrepreneurship": "Entrepreneuriat",
+    "cities": "Villes",
+    "partners": "Partenaires",
+    "faq": "FAQ",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "YouthConnect - Plateforme nationale pour la jeunesse",
+    "subtitle": "Une plateforme nationale sécurisée connectant les jeunes, les centres et les partenaires à travers les villes marocaines. Gérez les programmes, suivez l'impact et créez des opportunités.",
+    "cta_explore": "Explorer les programmes",
+    "cta_signup": "Créer un compte"
+  },
+  "stats": {
+    "centers": "Centres de jeunesse",
+    "beneficiaries": "Bénéficiaires",
+    "programs": "Programmes",
+    "partners": "Partenaires"
+  },
+  "services": {
+    "title": "Programmes et services pour les jeunes",
+    "training": "Programmes de montée en compétences et de formation professionnelle.",
+    "employment": "Placement professionnel, stages et connexions employeurs.",
+    "entrepreneurship": "Incubation, mentorat et micro-subventions pour les fondateurs.",
+    "sports": "Programmes sportifs locaux pour l'engagement des jeunes.",
+    "culture": "Activités artistiques et projets culturels.",
+    "volunteering": "Parcours de volontariat et participation citoyenne."
+  },
+  "featured": {
+    "title": "Programmes en vedette",
+    "founder_launch": "Founder Launchpad — prochaine cohorte bientôt"
+  },
+  "events": {
+    "title": "Événements à venir",
+    "founders_bootcamp": "Bootcamp des fondateurs",
+    "digital_skills": "Foire des compétences numériques",
+    "employment_forum": "Forum de l'emploi des jeunes",
+    "register": "S'inscrire"
+  },
+  "partners": {
+    "title": "Approuvé par des partenaires publics et privés"
+  },
+  "testimonials": {
+    "title": "Ce que disent les partenaires"
+  },
+  "gallery": {
+    "title": "Moments de nos centres"
+  },
+  "footer": {
+    "privacy": "Confidentialité",
+    "terms": "Conditions",
+    "copyright": "© {year} YouthConnect — Construit pour la jeunesse du Maroc"
+  }
+}

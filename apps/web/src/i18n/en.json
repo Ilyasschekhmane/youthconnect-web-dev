@@ -1,0 +1,61 @@
+{
+  "nav": {
+    "home": "Home",
+    "platform": "Platform",
+    "youth_centers": "Youth Centers",
+    "programs": "Programs",
+    "training": "Training",
+    "employment": "Employment",
+    "entrepreneurship": "Entrepreneurship",
+    "cities": "Cities",
+    "partners": "Partners",
+    "faq": "FAQ",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "YouthConnect - National Youth Platform",
+    "subtitle": "A secure national platform connecting youth, centers, and partners across Moroccan cities. Manage programs, track impact, and empower youth opportunity with a government-grade service.",
+    "cta_explore": "Explore Programs",
+    "cta_signup": "Create Account"
+  },
+  "stats": {
+    "centers": "Youth Centers",
+    "beneficiaries": "Beneficiaries",
+    "programs": "Programs",
+    "partners": "Partners"
+  },
+  "services": {
+    "title": "Programs & Services for Youth",
+    "training": "Upskilling and vocational programs to prepare youth for the job market.",
+    "employment": "Job placement, internships and employer connections.",
+    "entrepreneurship": "Incubation, mentoring and micro-grants for founders.",
+    "sports": "Local sport programs to engage youth and promote wellbeing.",
+    "culture": "Arts, cultural activities and heritage projects for communities.",
+    "volunteering": "Community volunteering pathways and civic participation."
+  },
+  "featured": {
+    "title": "Featured Programs",
+    "founder_launch": "Founder Launchpad — next cohort opens soon"
+  },
+  "events": {
+    "title": "Upcoming Events",
+    "founders_bootcamp": "Founders Bootcamp",
+    "digital_skills": "Digital Skills Fair",
+    "employment_forum": "Youth Employment Forum",
+    "register": "Register"
+  },
+  "partners": {
+    "title": "Trusted by public and private partners"
+  },
+  "testimonials": {
+    "title": "What partners say"
+  },
+  "gallery": {
+    "title": "Moments from our centers"
+  },
+  "footer": {
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "copyright": "© {year} YouthConnect — Built for Morocco's youth"
+  }
+}

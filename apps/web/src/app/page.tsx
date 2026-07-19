@@ -1,10 +1,13 @@
 ﻿'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { type MouseEvent, type KeyboardEvent, useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Menu, Moon, Sun, X, ShieldCheck, Server } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@youthconnect/ui';
+import { useTranslations } from 'next-intl';
+import { usePathname, useRouter } from 'next/navigation';
 
 const navItems = [
   { label: 'Home', href: '#home' },
@@ -21,10 +24,58 @@ const navItems = [
 ];
 
 const landingStats = [
-  { value: '25,000+', label: 'Applicants' },
-  { value: '185', label: 'Centers' },
-  { value: '500', label: 'Programs' },
-  { value: '98%', label: 'Satisfaction' },
+  { value: 150, labelKey: 'stats.centers', suffix: '+' },
+  { value: 80000, labelKey: 'stats.beneficiaries', suffix: '+' },
+  { value: 2500, labelKey: 'stats.programs', suffix: '+' },
+  { value: 300, labelKey: 'stats.partners', suffix: '+' },
+];
+
+const servicesList = [
+  { titleKey: 'nav.training', descriptionKey: 'services.training', icon: '🎓' },
+  { titleKey: 'nav.employment', descriptionKey: 'services.employment', icon: '💼' },
+  { titleKey: 'nav.entrepreneurship', descriptionKey: 'services.entrepreneurship', icon: '🚀' },
+  { titleKey: 'services.sports', descriptionKey: 'services.sports', icon: '🏅' },
+  { titleKey: 'services.culture', descriptionKey: 'services.culture', icon: '🎭' },
+  { titleKey: 'services.volunteering', descriptionKey: 'services.volunteering', icon: '🤝' },
+];
+
+// Simple animated counter component using requestAnimationFrame
+function Counter({ to, suffix = '', duration = 1400 }: { to: number; suffix?: string; duration?: number }) {
+  const [value, setValue] = useState(0);
+
+  useEffect(() => {
+    let start: number | null = null;
+    const from = 0;
+    const diff = to - from;
+    const step = (timestamp: number) => {
+      if (!start) start = timestamp;
+      const elapsed = timestamp - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = progress < 0.5 ? 2 * progress * progress : -1 + (4 - 2 * progress) * progress; // easeInOut
+      setValue(Math.round(from + diff * eased));
+      if (elapsed < duration) requestAnimationFrame(step);
+    };
+    const raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [to, duration]);
+
+  // Format large numbers (e.g., 80000 -> 80,000)
+  const formatted = value.toLocaleString();
+  return (
+    <span className="text-4xl font-semibold text-emerald-700">
+      {formatted}
+      {suffix}
+    </span>
+  );
+}
+
+const servicesList = [
+  { title: 'Training', description: 'Upskilling and vocational programs to prepare youth for the job market.', icon: '🎓' },
+  { title: 'Employment', description: 'Job placement, internships and employer connections.', icon: '💼' },
+  { title: 'Entrepreneurship', description: 'Incubation, mentoring and micro-grants for founders.', icon: '🚀' },
+  { title: 'Sports', description: 'Local sport programs to engage youth and promote wellbeing.', icon: '🏅' },
+  { title: 'Culture', description: 'Arts, cultural activities and heritage projects for communities.', icon: '🎭' },
+  { title: 'Volunteering', description: 'Community volunteering pathways and civic participation.', icon: '🤝' },
 ];
 
 const onboardingSteps = [
@@ -278,6 +329,10 @@ const regionMap = [
 ];
 
 export default function HomePage() {
+  const t = useTranslations();
+  const router = useRouter();
+  const pathname = usePathname();
+
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [mounted, setMounted] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -288,6 +343,38 @@ export default function HomePage() {
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
 
   const shouldReduceMotion = useReducedMotion();
+
+  const supportedLocales = ['ar', 'fr', 'en'];
+
+  function switchLocale(newLocale: string) {
+    // Persist selection
+    try {
+      localStorage.setItem('locale', newLocale);
+      document.cookie = `NEXT_LOCALE=${newLocale}; path=/`;
+    } catch (e) {
+      // ignore
+    }
+
+    // Build new path by replacing leading locale segment if present
+    const segments = (pathname || '/').split('/').filter(Boolean);
+    if (supportedLocales.includes(segments[0])) segments.shift();
+    const newPath = '/' + newLocale + (segments.length ? '/' + segments.join('/') : '');
+    router.push(newPath);
+  }
+
+  const navItemsTranslated = [
+    { label: t('nav.home'), href: '#home' },
+    { label: t('nav.platform'), href: '#overview' },
+    { label: t('nav.youth_centers'), href: '#cities' },
+    { label: t('nav.programs'), href: '#platform' },
+    { label: t('nav.training'), href: '#training' },
+    { label: t('nav.employment'), href: '#training' },
+    { label: t('nav.entrepreneurship'), href: '#platform' },
+    { label: t('nav.cities'), href: '#cities' },
+    { label: t('nav.partners'), href: '#partners' },
+    { label: t('nav.faq'), href: '#faq' },
+    { label: t('nav.contact'), href: '#contact' },
+  ];
 
   const parallaxStyle = (strength: number) => ({
     transform: `translate3d(${mousePosition.x * strength}px, ${mousePosition.y * strength}px, 0)`,
@@ -364,8 +451,10 @@ export default function HomePage() {
     return () => window.removeEventListener('scroll', updateActiveSection);
   }, [mounted]);
 
+  const reduceMotion = useReducedMotion();
+
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.14),_transparent_18%),linear-gradient(180deg,_#f8fafc_0%,_#e2e8f0_100%)] text-slate-950 transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100">
+    <main role="main" className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.14),_transparent_18%),linear-gradient(180deg,_#f8fafc_0%,_#e2e8f0_100%)] text-slate-950 transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100">
       <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/85 backdrop-blur-xl transition duration-300 dark:border-slate-800/70 dark:bg-slate-950/90">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 sm:px-8 lg:px-12">
           <div className="flex items-center gap-4">
@@ -373,7 +462,7 @@ export default function HomePage() {
               YouthConnect
             </div>
             <nav className="hidden items-center gap-2 md:flex">
-              {navItems.map((item) => (
+              {navItemsTranslated.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
@@ -390,6 +479,20 @@ export default function HomePage() {
           </div>
 
           <div className="flex items-center gap-3">
+            {/* Language switcher */}
+            <div className="hidden items-center gap-2 md:flex">
+              <select
+                aria-label="Language selector"
+                defaultValue={''}
+                onChange={(e) => switchLocale(e.target.value)}
+                className="rounded-lg border border-slate-200 bg-white/90 px-3 py-2 text-sm text-slate-900 shadow-sm"
+              >
+                <option value="ar">العربية</option>
+                <option value="fr">Français</option>
+                <option value="en">English</option>
+              </select>
+            </div>
+
             <button
               type="button"
               aria-label="Toggle theme"
@@ -414,7 +517,7 @@ export default function HomePage() {
         {mobileOpen ? (
           <div className="border-t border-slate-200/80 bg-white/95 px-6 py-5 shadow-xl shadow-slate-900/5 dark:border-slate-800/80 dark:bg-slate-950/95 md:hidden">
             <div className="flex flex-col gap-2">
-              {navItems.map((item) => (
+              {navItemsTranslated.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
@@ -433,164 +536,291 @@ export default function HomePage() {
         ) : null}
       </header>
 
-      <section
-        id="home"
-        className="relative overflow-hidden px-6 py-10 sm:px-8 lg:px-12"
-        onMouseMove={handleHeroMouseMove}
-        onMouseLeave={() => setMousePosition({ x: 0, y: 0 })}
-      >
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.18),transparent_18%),radial-gradient(circle_at_bottom_right,rgba(234,179,8,0.16),transparent_20%),linear-gradient(180deg,#0f172a_0%,#111827_35%,#0b1121_100%)]" />
-        <div className="pointer-events-none absolute inset-0 opacity-80">
-          <div className="absolute left-10 top-10 h-52 w-52 rounded-full bg-emerald-400/20 blur-3xl" style={parallaxStyle(0.16)} />
-          <div className="absolute right-14 top-28 h-60 w-60 rounded-full bg-amber-400/20 blur-3xl" style={parallaxStyle(-0.16)} />
-          <div className="absolute left-1/2 top-56 h-48 w-48 -translate-x-1/2 rounded-full bg-white/10 blur-3xl" style={parallaxStyle(-0.12)} />
-        </div>
+      <section id="home" className="relative overflow-hidden px-0 py-12 sm:py-20 lg:py-28">
+        {/* Background image (next/image) */}
+        <Image
+          src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=2000&q=80"
+          alt="Moroccan Youth Center"
+          fill
+          className="absolute inset-0 -z-20 object-cover"
+          sizes="100vw"
+          priority
+        />
 
-        <div className="relative z-10 mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -28 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-            className="space-y-8"
-          >
-            <div className="inline-flex items-center gap-3 rounded-full border border-amber-300/35 bg-white/10 px-4 py-2 text-sm font-semibold text-amber-100 shadow-xl shadow-amber-300/10 backdrop-blur">
-              <span className="h-2.5 w-2.5 rounded-full bg-amber-300 shadow-sm shadow-amber-300/40" />
-              Moroccan GovTech for youth centers, cities, and digital trust.
-            </div>
-            <motion.h1
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1, duration: 0.8, ease: 'easeOut' }}
-              className="text-5xl font-semibold leading-tight tracking-tight text-white sm:text-6xl lg:text-7xl"
-            >
-              Modernize youth opportunity across Morocco with a premium government digital platform.
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.8, ease: 'easeOut' }}
-              className="max-w-xl text-lg leading-8 text-slate-300 sm:text-xl"
-            >
-              YouthConnect brings secure center operations, regional insights, and enterprise workflows together in one polished service delivery system.
-            </motion.p>
-            <motion.div
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.25, duration: 0.75, ease: 'easeOut' }}
-              className="flex flex-wrap gap-4"
-            >
-              <Button asChild size="lg" className="bg-amber-400 text-slate-950 shadow-xl shadow-amber-400/20 hover:bg-amber-300 transition-transform duration-300 hover:-translate-y-0.5">
-                <Link href="/signup">Start pilot</Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="border-white/20 bg-white/10 text-white shadow-sm shadow-white/10 hover:bg-white/15 transition-transform duration-300 hover:-translate-y-0.5">
-                <Link href="#overview">See platform</Link>
-              </Button>
-            </motion.div>
+        {/* Dark overlay + soft gradients for glass effect */}
+        <div className="absolute inset-0 bg-black/55 backdrop-blur-sm" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_rgba(16,185,129,0.12),_transparent_20%),radial-gradient(ellipse_at_bottom_right,_rgba(59,130,246,0.08),_transparent_25%)]" />
 
+        <div className="relative z-10 mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
+          <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
+            {/* Left: animated heading and CTAs */}
             <motion.div
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.75, ease: 'easeOut' }}
-              className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"
+              initial={{ opacity: 0, x: -26 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.9, ease: 'easeOut' }}
+              className="space-y-6 sm:space-y-8"
             >
-              {landingStats.map((stat) => (
-                <motion.div
-                  key={stat.label}
-                  whileHover={{ y: -6 }}
-                  transition={{ type: 'spring', stiffness: 220, damping: 18 }}
-                  className="rounded-[28px] border border-white/10 bg-white/10 p-5 shadow-2xl shadow-black/10 backdrop-blur"
+              <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-amber-100 backdrop-blur-md">
+                <span className="h-2.5 w-2.5 rounded-full bg-amber-300 shadow-sm" />
+                <span className="text-sm text-amber-100">{t('hero.subtitle')}</span>
+              </div>
+
+              <motion.h1
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.12, duration: 0.9, ease: 'easeOut' }}
+                className="text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl"
+              >
+                <span className="block bg-gradient-to-r from-emerald-300 via-amber-300 to-emerald-200 bg-clip-text text-transparent">{t('hero.title')}</span>
+              </motion.h1>
+
+              <motion.p
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.8 }}
+                className="max-w-2xl text-lg leading-7 text-slate-200"
+              >
+                {t('hero.lead') || t('hero.subtitle')}
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.28, duration: 0.7 }}
+                className="flex flex-wrap items-center gap-4"
+              >
+                <Button asChild size="lg" className="bg-emerald-500 text-white shadow-lg hover:bg-emerald-400 transform-gpu transition will-change-transform hover:-translate-y-0.5">
+                  <Link href="#platform">{t('hero.cta_explore')}</Link>
+                </Button>
+
+                <Button asChild variant="outline" size="lg" className="border-white/20 bg-white/5 text-white shadow-sm hover:bg-white/8 transition-transform duration-200">
+                  <Link href="/signup">{t('hero.cta_signup')}</Link>
+                </Button>
+
+                <a
+                  href="#featured-programs"
+                  className="ml-2 hidden text-sm font-medium text-slate-200 underline-offset-4 hover:underline md:inline"
                 >
-                  <p className="text-4xl font-semibold text-white">{stat.value}</p>
-                  <p className="mt-2 text-sm uppercase tracking-[0.2em] text-slate-300">{stat.label}</p>
-                </motion.div>
-              ))}
+                  {t('hero.learn_more')}
+                </a>
+              </motion.div>
+
+              {/* Quick stats as small glass cards */}
+              <div className="mt-6 flex flex-wrap gap-3">
+                {landingStats.map((s) => (
+                  <motion.div
+                    key={s.labelKey}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.32 + Math.random() * 0.2 }}
+                    className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-100 backdrop-blur-md"
+                  >
+                    <div className="text-2xl">{s.icon ?? '📍'}</div>
+                    <div>
+                      <div className="text-base font-semibold text-white"><Counter to={s.value as number} suffix={s.suffix ?? ''} /></div>
+                      <div className="text-xs uppercase tracking-wide text-slate-200">{t(s.labelKey)}</div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </motion.div>
-          </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.85, ease: 'easeOut' }}
-            className="relative"
-          >
-            <div className="absolute -left-8 top-10 h-44 w-44 rounded-full bg-amber-400/20 blur-3xl" style={parallaxStyle(-0.14)} />
-            <div className="absolute right-4 top-36 h-36 w-36 rounded-full bg-emerald-400/20 blur-3xl" style={parallaxStyle(0.14)} />
-            <div className="absolute -right-12 bottom-16 h-28 w-28 rounded-full bg-white/10 blur-3xl" style={parallaxStyle(-0.1)} />
-
-            <div className="relative rounded-[36px] border border-white/10 bg-slate-950/95 p-6 shadow-[0_40px_120px_rgba(15,23,42,0.35)] backdrop-blur-xl" style={parallaxStyle(0.08)}>
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(234,179,8,0.18),transparent_35%)]" />
-              <div className="relative rounded-[30px] border border-white/10 bg-slate-950/95 p-6 text-white shadow-2xl">
-                <div className="flex flex-wrap items-center justify-between gap-4">
-                  <div>
-                    <p className="text-sm uppercase tracking-[0.3em] text-amber-200/80">Operations</p>
-                    <p className="mt-2 text-2xl font-semibold">Leadership dashboard</p>
-                  </div>
-                  <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-sm font-semibold text-emerald-200">Secure</span>
-                </div>
-                <div className="mt-6 grid gap-4 sm:grid-cols-3">
-                  {[
-                    { label: 'Centers', value: '184' },
-                    { label: 'Programs', value: '92' },
-                    { label: 'Impact', value: '94%' },
-                  ].map((metric) => (
-                    <div key={metric.label} className="rounded-3xl bg-slate-900/90 p-4">
-                      <p className="text-sm text-slate-400">{metric.label}</p>
-                      <p className="mt-3 text-2xl font-semibold text-white">{metric.value}</p>
+            {/* Right: floating glass cards + mockup */}
+            <div className="relative -mx-4 lg:mx-0">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.18, duration: 0.9, ease: 'easeOut' }}
+                className="mx-auto max-w-md lg:max-w-none"
+              >
+                <div className="relative">
+                  {/* App mockup card */}
+                  <div className="rounded-3xl border border-white/10 bg-gradient-to-b from-white/6 to-white/3 p-4 shadow-2xl backdrop-blur-md">
+                    <div className="h-64 rounded-2xl bg-gradient-to-br from-slate-800/60 via-slate-900/60 to-slate-950/70 overflow-hidden">
+                      <div className="relative h-full w-full opacity-90">
+                          <Image
+                            src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1200&q=80"
+                            alt="Students at a workshop"
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 640px) 100vw, 800px"
+                            loading="lazy"
+                          />
+                        </div>
                     </div>
-                  ))}
-                </div>
-                <div className="mt-6 h-[220px] overflow-hidden rounded-[28px] border border-white/10 bg-slate-900/95 p-4">
-                  <div className="h-full w-full rounded-[24px] bg-gradient-to-b from-slate-900 to-slate-950 p-4">
-                    <div className="flex items-center justify-between text-xs uppercase tracking-[0.3em] text-slate-500">
-                      <span>Morocco city network</span>
-                      <span>Live</span>
-                    </div>
-                    <div className="mt-5 h-[120px] rounded-[24px] border border-white/10 bg-gradient-to-br from-slate-950/80 via-slate-900/80 to-slate-950/95 p-4">
-                      <div className="h-full w-full rounded-[20px] bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.28),transparent_40%)]" />
-                    </div>
-                    <div className="mt-4 flex items-center justify-between text-sm text-slate-400">
-                      <span>Active centers</span>
-                      <span>184</span>
+                    <div className="mt-4 grid grid-cols-2 gap-3">
+                      {centerCards.map((c) => (
+                        <div key={c.title} className="rounded-xl bg-white/6 p-3">
+                          <p className="text-sm text-slate-200">{c.title}</p>
+                          <p className="mt-1 text-xs text-slate-300">{c.description}</p>
+                        </div>
+                      ))}
                     </div>
                   </div>
+
+                  {/* Floating cards */}
+                  <motion.div
+                    animate={reduceMotion ? { y: 0 } : { y: [0, -12, 0] }}
+                    transition={reduceMotion ? { duration: 0 } : { duration: 4.2, repeat: Infinity, ease: 'easeInOut' }}
+                    className="absolute -left-6 top-6 hidden w-44 rounded-2xl border border-white/10 bg-white/6 p-3 shadow-xl backdrop-blur-md md:block"
+                  >
+                    <p className="text-xs uppercase tracking-wide text-slate-200">{t('hero.quick_actions')}</p>
+                    <p className="mt-2 text-sm font-semibold text-white">{t('hero.quick_apply')}</p>
+                    <p className="mt-1 text-xs text-slate-300">{t('hero.quick_apply_desc')}</p>
+                  </motion.div>
+
+                  <motion.div
+                    animate={reduceMotion ? { y: 0 } : { y: [0, -8, 0] }}
+                    transition={reduceMotion ? { duration: 0 } : { duration: 3.6, repeat: Infinity, ease: 'easeInOut', delay: 0.6 }}
+                    className="absolute -right-6 bottom-16 hidden w-48 rounded-2xl border border-white/10 bg-white/6 p-3 shadow-xl backdrop-blur-md lg:block"
+                  >
+                    <p className="text-xs uppercase tracking-wide text-slate-200">{t('hero.upcoming')}</p>
+                    <p className="mt-2 text-sm font-semibold text-white">{t('events.next_event_city', { city: 'Rabat' })}</p>
+                    <p className="mt-1 text-xs text-slate-300">{t('events.next_event_date', { date: '15 Aug' })}</p>
+                  </motion.div>
+
+                  <motion.div
+                    animate={reduceMotion ? { y: 0 } : { y: [0, -10, 0] }}
+                    transition={reduceMotion ? { duration: 0 } : { duration: 4.6, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+                    className="absolute left-1/3 -bottom-10 hidden w-52 rounded-3xl border border-white/10 bg-gradient-to-br from-emerald-500/6 to-amber-400/6 p-4 shadow-2xl backdrop-blur-md lg:block"
+                  >
+                    <p className="text-xs uppercase tracking-wide text-emerald-200">Programs</p>
+                    <p className="mt-2 font-semibold text-white">Founder Launchpad</p>
+                    <p className="mt-1 text-xs text-slate-300">Accelerator for youth ventures</p>
+                  </motion.div>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Services */}
+      <section id="services" className="mx-auto max-w-7xl px-6 py-12 sm:px-8 lg:px-12">
+        <div className="mb-6">
+          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-emerald-700">{t('services.title')}</p>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">{t('services.title')}</h2>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {servicesList.map((s) => (
+            <motion.div key={s.titleKey} whileHover={{ y: -6 }} className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
+              <div className="flex items-center gap-4">
+                <div className="rounded-lg bg-emerald-50 p-3 text-2xl">{s.icon}</div>
+                <div>
+                  <h3 className="text-lg font-semibold text-slate-900">{t(s.titleKey)}</h3>
+                  <p className="mt-1 text-sm text-slate-600">{t(s.descriptionKey)}</p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Featured Programs */}
+      <section id="featured-programs" className="mx-auto max-w-7xl px-6 py-12 sm:px-8 lg:px-12">
+        <div className="mb-6">
+          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-emerald-700">Featured</p>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">Featured Programs</h2>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {programCards.map((p) => (
+            <Card key={p.title} className="overflow-hidden rounded-2xl">
+              <div className="h-36 w-full bg-gradient-to-br from-emerald-200 to-emerald-500" />
+              <CardContent>
+                <p className="text-lg font-semibold text-slate-900">{p.title}</p>
+                <p className="mt-2 text-sm text-slate-600">{p.description}</p>
+                <div className="mt-4 flex items-center gap-2">
+                  <Button asChild size="sm">
+                    <Link href="/programs">{t('featured.title')}</Link>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* Upcoming Events */}
+      <section id="events" className="mx-auto max-w-7xl px-6 py-12 sm:px-8 lg:px-12">
+        <div className="mb-6">
+          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-emerald-700">Events</p>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">Upcoming Events</h2>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {[
+            { date: '2026-08-12', titleKey: 'events.founders_bootcamp', city: 'Rabat' },
+            { date: '2026-09-02', titleKey: 'events.digital_skills', city: 'Casablanca' },
+            { date: '2026-09-22', titleKey: 'events.employment_forum', city: 'Marrakech' },
+          ].map((e) => (
+            <div key={e.titleKey} className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-emerald-700">{new Date(e.date).toLocaleDateString()}</p>
+                  <p className="mt-2 font-semibold text-slate-900">{t(e.titleKey)}</p>
+                  <p className="mt-1 text-sm text-slate-600">{e.city}</p>
+                </div>
+                <div>
+                  <Button asChild size="sm" className="bg-emerald-600 text-white">
+                    <Link href="#">{t('events.register')}</Link>
+                  </Button>
                 </div>
               </div>
             </div>
+          ))}
+        </div>
+      </section>
 
-            <motion.div
-              initial={{ opacity: 0, scale: 0.92 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2, duration: 0.7, ease: 'easeOut' }}
-              className="absolute -right-10 bottom-10 h-[340px] w-[190px] overflow-hidden rounded-[36px] border border-white/15 bg-slate-950/95 shadow-2xl shadow-black/30"
-              style={parallaxStyle(0.22)}
-            >
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(236,100,24,0.22),transparent_40%)]" />
-              <div className="relative flex h-full flex-col border border-white/10 bg-slate-950/95 p-4">
-                <div className="mb-4 flex items-center justify-between rounded-3xl bg-slate-900/90 px-3 py-2 text-xs text-slate-300">
-                  <span>YouthConnect App</span>
-                  <span className="rounded-full bg-emerald-500/20 px-2 py-1 text-emerald-200">BETA</span>
-                </div>
-                <div className="mb-4 h-12 rounded-3xl bg-slate-900/80" />
-                <div className="grid gap-3">
-                  <div className="h-14 rounded-3xl bg-slate-900/80 p-3 text-sm text-slate-300">
-                    <div className="mb-2 h-2.5 w-2/3 rounded-full bg-slate-800" />
-                    <div className="h-2 w-1/2 rounded-full bg-slate-800" />
-                  </div>
-                  <div className="h-14 rounded-3xl bg-slate-900/80 p-3 text-sm text-slate-300">
-                    <div className="mb-2 h-2.5 w-1/2 rounded-full bg-slate-800" />
-                    <div className="h-2 w-1/3 rounded-full bg-slate-800" />
-                  </div>
-                  <div className="h-20 rounded-[28px] bg-gradient-to-br from-amber-400/20 to-emerald-400/15 p-3 text-sm text-slate-100">
-                    <div className="mb-3 flex items-center justify-between text-xs uppercase tracking-[0.3em] text-slate-300">
-                      <span>Alerts</span>
-                      <span>3 new</span>
-                    </div>
-                    <div className="h-7 rounded-2xl bg-white/10" />
-                  </div>
-                </div>
+      {/* Partners */}
+      <section id="partners" className="mx-auto max-w-7xl px-6 py-12 sm:px-8 lg:px-12">
+        <div className="mb-6">
+          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-emerald-700">Partners</p>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">{t('partners.title')}</h2>
+        </div>
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
+          {partners.map((p) => (
+            <div key={p} className="flex items-center justify-center rounded-md border border-slate-100 bg-white p-4 text-sm font-semibold text-slate-700 shadow-sm">
+              {p}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section id="testimonials" className="mx-auto max-w-7xl px-6 py-12 sm:px-8 lg:px-12">
+        <div className="mb-6">
+          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-emerald-700">Voices</p>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">{t('testimonials.title')}</h2>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {testimonials.map((t) => (
+            <div key={t.author} className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
+              <p className="italic text-slate-700">&quot;{t.quote}&quot;</p>
+              <p className="mt-4 font-semibold text-slate-900">{t.author}</p>
+              <p className="text-sm text-slate-600">{t.role}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Gallery */}
+      <section id="gallery" className="mx-auto max-w-7xl px-6 py-12 sm:px-8 lg:px-12">
+        <div className="mb-6">
+          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-emerald-700">Gallery</p>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">{t('gallery.title')}</h2>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=60',
+            'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=60',
+            'https://images.unsplash.com/photo-1504805572947-34fad45aed93?auto=format&fit=crop&w=800&q=60',
+            'https://images.unsplash.com/photo-1505685296765-3a2736de412f?auto=format&fit=crop&w=800&q=60',
+          ].map((src, i) => (
+            <div key={i} className="overflow-hidden rounded-2xl">
+              <div className="relative h-48 w-full">
+                <Image src={src} alt={`Gallery image ${i + 1}`} fill className="object-cover" sizes="(max-width: 640px) 100vw, 320px" loading="lazy" />
               </div>
-            </motion.div>
-          </motion.div>
+            </div>
+          ))}
         </div>
       </section>
 

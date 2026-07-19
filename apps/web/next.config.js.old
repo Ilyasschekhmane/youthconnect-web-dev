@@ -1,0 +1,20 @@
+/**
+ * Next.js configuration for the web app
+ * Enables remote image optimization for Unsplash and enables strict mode.
+ */
+
+const nextConfig = {
+  reactStrictMode: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
+};
+
+module.exports = nextConfig;

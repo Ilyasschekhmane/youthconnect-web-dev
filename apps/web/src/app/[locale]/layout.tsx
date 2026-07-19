@@ -36,10 +36,19 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
     notFound();
   }
 
+  // Dynamically load the locale messages from src/i18n/{locale}.json
+  let messages;
+  try {
+  // path relative to this file: ../../i18n/{locale}.json
+  messages = (await import(`../../i18n/${locale}.json`)).default;
+  } catch (e) {
+    messages = {};
+  }
+
   return (
     <html lang={locale} dir={getDirection(locale)}>
       <body className={inter.className}>
-        <NextIntlClientProvider locale={locale} messages={{}}>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider locale={locale} messages={messages}>{children}</NextIntlClientProvider>
       </body>
     </html>
   );
